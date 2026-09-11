@@ -95,7 +95,7 @@ const products = [
     taglineAr: 'ملك التمور',
     desc: "Large, plump, and extraordinarily sweet with a rich caramel depth — the Medjool is TAYYIB's crown jewel. Grown in the fertile oases of El Wadi El Jedid, each date is hand-selected at peak ripeness for its signature softness and complex flavor.",
     note: 'Flagship · Hand-harvested · Limited season',
-    img: 'https://images.unsplash.com/photo-1494675595046-ae42af7dc2ce?w=600&h=800&fit=crop&auto=format',
+    img: 'images/Generated Image September 11, 2026 - 11_38PM.jpg',
     accent: '#B87333',
     bg: '#2C1206',
     badge: true,
