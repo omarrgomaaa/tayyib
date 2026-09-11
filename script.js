@@ -113,7 +113,7 @@ const products = [
     taglineAr: 'حلاوة الصحراء',
     desc: 'Our classic Egyptian dates — firm yet yielding, with a clean honeyed sweetness. Dried naturally under the desert sun, these dates retain every mineral and antioxidant the earth poured into them. The everyday companion for a nourished life.',
     note: 'Year-round · Sun-dried · Rich in iron',
-    img: 'https://images.unsplash.com/photo-1609687992670-6232aa115e27?w=600&h=800&fit=crop&auto=format',
+    img: 'images/Generated Image September 11, 2026 - 11_37PM.jpg',
     accent: '#7A8C5C',
     bg: '#1E2A14',
     badge: false,
