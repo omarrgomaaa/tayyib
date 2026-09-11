@@ -127,7 +127,7 @@ const products = [
     nameEn: 'Dates with Nuts',
     tagline: 'Nourishment, Elevated',
     taglineAr: 'التغذية في أسمى صورها',
-    desc: 'Premium Medjool dates filled with whole almonds, walnuts, or pistachios — a marriage of textures and flavors rooted in the Levantine and Egyptian gift-giving tradition. Each piece is a small act of generosity.',
+    desc: 'Premium dates filled with whole almonds, walnuts, or pistachios — a marriage of textures and flavors rooted in the Levantine and Egyptian gift-giving tradition. Each piece is a small act of generosity.',
     note: 'Gift boxes available · Almond · Walnut · Pistachio',
     img: 'https://images.unsplash.com/photo-1778488028552-be65c47f8d1a?w=600&h=800&fit=crop&auto=format',
     accent: '#9B6B3A',
