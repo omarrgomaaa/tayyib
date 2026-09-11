@@ -71,7 +71,7 @@ const STORE = {
   currency: 'EGP',
   deliveryFee: 50,          // flat delivery fee, all over Egypt
   freeDeliveryOver: null,   // e.g. set to 1500 to offer free delivery above a threshold; null = disabled
-  orderEmail: 'gomaajr@gmail.com',   // where order form submissions are sent
+  orderEmail: 'tayyibdates.eg@gmail.com',   // where order form submissions are sent
   whatsappNumber: '01022428111',     // WhatsApp / Vodafone Cash number
   instapayHandle: 'omarr_gomaa@instapay',
   instapayLink: 'https://ipn.eg/S/omarr_gomaa/instapay/5Yg5LE',
