@@ -131,7 +131,7 @@ const products = [
     taglineAr: 'التغذية في أسمى صورها',
     desc: 'Premium dates filled with whole almonds, walnuts, or peanuts — a marriage of textures and flavors rooted in the Levantine and Egyptian gift-giving tradition. Each piece is a small act of generosity.',
     note: 'Almond · Walnut · peanuts',
-    img: 'https://images.unsplash.com/photo-1778488028552-be65c47f8d1a?w=600&h=800&fit=crop&auto=format',
+    img: 'images/Generated Image September 11, 2026 - 11_45PM.jpg',
     accent: '#9B6B3A',
     bg: '#2A1A08',
     badge: false,
