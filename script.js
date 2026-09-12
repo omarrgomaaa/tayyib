@@ -69,9 +69,9 @@ document.getElementById('quote-star').innerHTML = eightStarSVG(36, '#E8C88A', 0.
 
 const STORE = {
   currency: 'EGP',
-  deliveryFee: 50,          // flat delivery fee, all over Egypt
+  deliveryFee: 80,          // flat delivery fee, all over Egypt
   freeDeliveryOver: null,   // e.g. set to 1500 to offer free delivery above a threshold; null = disabled
-  orderEmail: 'gomaajr@gmail.com',   // where order form submissions are sent
+  orderEmail: 'tayyibdates.eg@gmail.com',   // where order form submissions are sent
   whatsappNumber: '01022428111',     // WhatsApp / Vodafone Cash number
   instapayHandle: 'omarr_gomaa@instapay',
   instapayLink: 'https://ipn.eg/S/omarr_gomaa/instapay/5Yg5LE',
@@ -100,9 +100,9 @@ const products = [
     bg: '#2C1206',
     badge: true,
     sizes: [
-      { label: '250g', price: 400 },
-      { label: '500g', price: 400 },
-      { label: '1kg', price: 400 },
+      { label: '250g', price: 200 },
+      { label: '500g', price: 350 },
+      { label: '1kg', price: 600 },
     ],
   },
   {
@@ -118,9 +118,9 @@ const products = [
     bg: '#1E2A14',
     badge: false,
     sizes: [
-      { label: '250g', price: 400 },
-      { label: '500g', price: 400 },
-      { label: '1kg', price: 400 },
+      { label: '250g', price: 50 },
+      { label: '500g', price: 80 },
+      { label: '1kg', price: 130 },
     ],
   },
   {
@@ -136,8 +136,8 @@ const products = [
     bg: '#2A1A08',
     badge: false,
     sizes: [
-      { label: '250g box', price: 400 },
-      { label: '500g box', price: 400 },
+      { label: '250g box', price: 300 },
+      { label: '500g box', price: 500 },
     ],
   },
 ]
