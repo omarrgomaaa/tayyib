@@ -100,9 +100,8 @@ const products = [
     bg: '#2C1206',
     badge: true,
     sizes: [
-      { label: '250g', price: 200 },
-      { label: '500g', price: 350 },
-      { label: '1kg', price: 600 },
+      { label: '500g', price: 250 },
+      { label: '1kg', price: 400 },
     ],
   },
   {
@@ -118,9 +117,8 @@ const products = [
     bg: '#1E2A14',
     badge: false,
     sizes: [
-      { label: '250g', price: 50 },
-      { label: '500g', price: 80 },
-      { label: '1kg', price: 130 },
+      { label: '500g', price: 50 },
+      { label: '1kg', price: 90 },
     ],
   },
   {
