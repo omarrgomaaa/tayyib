@@ -776,7 +776,7 @@ function renderCheckoutForm(body) {
           <p>Send <b>${formatPrice(total)}</b> via InstaPay to <b>${STORE.instapayHandle}</b>, or scan the QR code below. Vodafone Cash also works, to <b>${STORE.whatsappNumber}</b>.</p>
           <a class="instapay-pay-link" href="${STORE.instapayLink}" target="_blank" rel="noopener">Pay ${formatPrice(total)} via InstaPay &rarr;</a>
           <img class="instapay-qr-img" src="${STORE.instapayQr}" alt="InstaPay QR code for ${STORE.instapayHandle}" />
-          <p class="instapay-note">Please place your order first, then send payment — we'll confirm once received.</p>
+          <p class="instapay-note">Tapping the button above places your order and opens InstaPay — we'll confirm once payment is received.</p>
         </div>
       </div>
 
@@ -807,10 +807,25 @@ function renderCheckoutForm(body) {
   syncPayUI()
 
   document.getElementById('checkout-form').addEventListener('submit', handleCheckoutSubmit)
+
+  // "Pay via InstaPay" also places the order (emails it to the store), then opens InstaPay
+  const payLink = body.querySelector('.instapay-pay-link')
+  if (payLink) {
+    payLink.addEventListener('click', (e) => {
+      e.preventDefault()
+      const formEl = document.getElementById('checkout-form')
+      if (!formEl.reportValidity()) return
+      if (document.getElementById('place-order-btn').disabled) return
+      // open synchronously so the browser doesn't block the popup
+      window.open(STORE.instapayLink, '_blank', 'noopener')
+      handleCheckoutSubmit()
+    })
+  }
 }
 
 async function handleCheckoutSubmit(e) {
-  e.preventDefault()
+  if (e) e.preventDefault()
+  if (!cart.length) return
   const btn = document.getElementById('place-order-btn')
   const original = btn.textContent
   btn.disabled = true
