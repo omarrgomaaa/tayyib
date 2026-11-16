@@ -774,9 +774,9 @@ function renderCheckoutForm(body) {
         </div>
         <div class="instapay-details" id="instapay-details">
           <p>Send <b>${formatPrice(total)}</b> via InstaPay to <b>${STORE.instapayHandle}</b>, or scan the QR code below. Vodafone Cash also works, to <b>${STORE.whatsappNumber}</b>.</p>
-          <a class="instapay-pay-link" href="${STORE.instapayLink}" target="_blank" rel="noopener">Pay ${formatPrice(total)} via InstaPay &rarr;</a>
+          <a class="instapay-pay-link" id="instapay-pay-btn" href="${STORE.instapayLink}" target="_blank" rel="noopener">Pay ${formatPrice(total)} via InstaPay &rarr;</a>
           <img class="instapay-qr-img" src="${STORE.instapayQr}" alt="InstaPay QR code for ${STORE.instapayHandle}" />
-          <p class="instapay-note">Please place your order first, then send payment — we'll confirm once received.</p>
+          <p class="instapay-note">Clicking the button above will record your order and open InstaPay.</p>
         </div>
       </div>
 
@@ -806,22 +806,43 @@ function renderCheckoutForm(body) {
   body.querySelectorAll('input[name="payment"]').forEach((r) => r.addEventListener('change', syncPayUI))
   syncPayUI()
 
-  document.getElementById('checkout-form').addEventListener('submit', handleCheckoutSubmit)
+  const checkoutForm = document.getElementById('checkout-form')
+  checkoutForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    submitOrder()
+  })
+
+  document.getElementById('instapay-pay-btn').addEventListener('click', async (e) => {
+    e.preventDefault()
+    // Ensure required fields (name, phone, city, address) are filled before submitting
+    if (!checkoutForm.reportValidity()) return
+
+    const success = await submitOrder('InstaPay (Clicked Pay Link)')
+    if (success) {
+      window.open(STORE.instapayLink, '_blank', 'noopener')
+    }
+  })
 }
 
-async function handleCheckoutSubmit(e) {
-  e.preventDefault()
+async function submitOrder(paymentOverride = null) {
   const btn = document.getElementById('place-order-btn')
-  const original = btn.textContent
+  const instaBtn = document.getElementById('instapay-pay-btn')
+  const originalBtnText = btn.textContent
+  const originalInstaText = instaBtn ? instaBtn.textContent : ''
+
   btn.disabled = true
   btn.textContent = 'Placing order…'
+  if (instaBtn) {
+    instaBtn.style.pointerEvents = 'none'
+    instaBtn.textContent = 'Recording order & opening InstaPay…'
+  }
 
   const name = document.getElementById('cf-name').value
   const phone = document.getElementById('cf-phone').value
   const city = document.getElementById('cf-city').value
   const address = document.getElementById('cf-address').value
   const notes = document.getElementById('cf-notes').value
-  const payment = document.querySelector('input[name="payment"]:checked').value
+  const payment = paymentOverride || document.querySelector('input[name="payment"]:checked').value
 
   const subtotal = cartSubtotal()
   const delivery = currentDeliveryFee()
@@ -860,13 +881,18 @@ async function handleCheckoutSubmit(e) {
     updateCartCount()
     checkoutStep = 'success'
     renderCartBody()
+    return true
   } catch (err) {
     btn.disabled = false
-    btn.textContent = original
+    btn.textContent = originalBtnText
+    if (instaBtn) {
+      instaBtn.style.pointerEvents = 'auto'
+      instaBtn.textContent = originalInstaText
+    }
     showToast("Couldn't send your order — please check your connection and try again, or contact us directly.")
+    return false
   }
 }
-
 // ---------- Toast ----------
 
 let toastTimer = null
