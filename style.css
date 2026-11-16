@@ -1044,3 +1044,28 @@ body.no-scroll { overflow: hidden; }
   transition: opacity 0.15s ease;
 }
 .whatsapp-btn:hover { opacity: 0.88; }
+
+/* ---------- Sold out ---------- */
+.product-badge.sold-out-badge {
+  background: #555;
+  color: #fff;
+}
+.product-card.sold-out .product-card-image img,
+.product-image.sold-out img {
+  filter: grayscale(0.7) brightness(0.7);
+}
+.product-card.sold-out .product-card-price {
+  color: #8a6a44;
+  font-style: italic;
+}
+.add-to-cart-btn.sold-out-btn,
+.add-to-cart-btn:disabled {
+  background: #555;
+  color: #ddd;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.add-to-cart-btn.sold-out-btn:hover,
+.add-to-cart-btn:disabled:hover { opacity: 0.7; }
+.add-to-cart-btn.sold-out-btn:active,
+.add-to-cart-btn:disabled:active { transform: none; }
