@@ -85,6 +85,8 @@ const STORE = {
 const FORM_ENDPOINT = `https://formsubmit.co/ajax/${STORE.orderEmail}`
 
 // ---------- Products ----------
+// Set `soldOut: true` on a product to mark it unavailable; set it back to
+// false (or remove it) when you restock.
 
 const products = [
   {
@@ -99,6 +101,7 @@ const products = [
     accent: '#B87333',
     bg: '#2C1206',
     badge: true,
+    soldOut: false,
     sizes: [
       { label: '500g', price: 250 },
       { label: '1kg', price: 400 },
@@ -116,6 +119,7 @@ const products = [
     accent: '#7A8C5C',
     bg: '#1E2A14',
     badge: false,
+    soldOut: false,
     sizes: [
       { label: '500g', price: 50 },
       { label: '1kg', price: 90 },
@@ -133,6 +137,7 @@ const products = [
     accent: '#9B6B3A',
     bg: '#2A1A08',
     badge: false,
+    soldOut: true,
     sizes: [
       { label: '250g box', price: 300 },
       { label: '500g box', price: 500 },
@@ -171,21 +176,31 @@ function renderProductsGrid(filterQuery = '') {
   grid.innerHTML = visible
     .map(
       (p) => `
-    <div class="product-card" data-id="${p.id}" style="background:${p.bg}">
+    <div class="product-card${p.soldOut ? ' sold-out' : ''}" data-id="${p.id}" style="background:${p.bg}">
       <div class="product-card-image">
         <img src="${p.img}" alt="${p.nameEn}" />
         <div class="product-card-gradient" style="background:linear-gradient(to top, ${p.bg} 0%, transparent 55%)"></div>
-        ${p.badge ? '<div class="product-badge show">★ Signature</div>' : ''}
+        ${
+          p.soldOut
+            ? '<div class="product-badge show sold-out-badge">Sold Out</div>'
+            : p.badge
+            ? '<div class="product-badge show">★ Signature</div>'
+            : ''
+        }
         <div class="product-card-hover">
-          <button type="button" class="quick-add-btn" data-quick-add="${p.id}" style="background:${p.accent}">Quick Add</button>
-          <span class="view-hint">Tap to view &amp; choose size</span>
+          ${
+            p.soldOut
+              ? ''
+              : `<button type="button" class="quick-add-btn" data-quick-add="${p.id}" style="background:${p.accent}">Quick Add</button>`
+          }
+          <span class="view-hint">Tap to view${p.soldOut ? '' : ' &amp; choose size'}</span>
         </div>
       </div>
       <div class="product-card-info">
         <p class="product-card-nameAr">${p.nameAr}</p>
         <p class="product-card-nameEn">${p.nameEn}</p>
         <p class="product-card-tagline" style="color:${p.accent}">${p.tagline}</p>
-        <p class="product-card-price">From ${formatPrice(minPrice(p))}</p>
+        <p class="product-card-price">${p.soldOut ? 'Sold out' : `From ${formatPrice(minPrice(p))}`}</p>
       </div>
     </div>`
     )
@@ -200,6 +215,7 @@ function renderProductsGrid(filterQuery = '') {
     btn.addEventListener('click', (e) => {
       e.stopPropagation()
       const p = products.find((pr) => pr.id === btn.dataset.quickAdd)
+      if (!p || p.soldOut) return
       addToCart(p, p.sizes[0], 1)
     })
   })
@@ -226,10 +242,14 @@ function renderProductPage(id) {
   inner.innerHTML = `
     <button type="button" class="product-page-back" id="product-page-back">&larr; Back to all products</button>
     <div class="product-page-grid">
-      <div class="product-image" style="background:${p.bg}">
+      <div class="product-image${p.soldOut ? ' sold-out' : ''}" style="background:${p.bg}">
         <img src="${p.img}" alt="${p.nameEn}" />
         <div class="gradient" style="background:linear-gradient(to top, ${p.bg} 0%, transparent 60%)"></div>
-        <div class="product-badge${p.badge ? ' show' : ''}">★ Signature</div>
+        ${
+          p.soldOut
+            ? '<div class="product-badge show sold-out-badge">Sold Out</div>'
+            : `<div class="product-badge${p.badge ? ' show' : ''}">★ Signature</div>`
+        }
       </div>
       <div>
         <p class="product-nameAr">${p.nameAr}</p>
@@ -254,16 +274,20 @@ function renderProductPage(id) {
               )
               .join('')}
           </div>
-          <div class="buy-row">
-            <div class="qty-control">
-              <button type="button" id="qty-minus" aria-label="Decrease quantity">&minus;</button>
-              <span id="qty-value">${sel.qty}</span>
-              <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
-            </div>
-            <button type="button" class="add-to-cart-btn" id="add-to-cart" style="background:${p.accent}">
-              Add to Cart — ${formatPrice(size.price * sel.qty)}
-            </button>
-          </div>
+          ${
+            p.soldOut
+              ? `<button type="button" class="add-to-cart-btn sold-out-btn" disabled>Sold Out</button>`
+              : `<div class="buy-row">
+              <div class="qty-control">
+                <button type="button" id="qty-minus" aria-label="Decrease quantity">&minus;</button>
+                <span id="qty-value">${sel.qty}</span>
+                <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+              </div>
+              <button type="button" class="add-to-cart-btn" id="add-to-cart" style="background:${p.accent}">
+                Add to Cart — ${formatPrice(size.price * sel.qty)}
+              </button>
+            </div>`
+          }
         </div>
       </div>
     </div>
@@ -276,19 +300,21 @@ function renderProductPage(id) {
       renderProductPage(id)
     })
   })
-  inner.querySelector('#qty-minus').addEventListener('click', () => {
-    sel.qty = Math.max(1, sel.qty - 1)
-    renderProductPage(id)
-  })
-  inner.querySelector('#qty-plus').addEventListener('click', () => {
-    sel.qty = Math.min(20, sel.qty + 1)
-    renderProductPage(id)
-  })
-  inner.querySelector('#add-to-cart').addEventListener('click', () => {
-    addToCart(p, size, sel.qty)
-    sel.qty = 1
-    renderProductPage(id)
-  })
+  if (!p.soldOut) {
+    inner.querySelector('#qty-minus').addEventListener('click', () => {
+      sel.qty = Math.max(1, sel.qty - 1)
+      renderProductPage(id)
+    })
+    inner.querySelector('#qty-plus').addEventListener('click', () => {
+      sel.qty = Math.min(20, sel.qty + 1)
+      renderProductPage(id)
+    })
+    inner.querySelector('#add-to-cart').addEventListener('click', () => {
+      addToCart(p, size, sel.qty)
+      sel.qty = 1
+      renderProductPage(id)
+    })
+  }
 }
 
 function openProductPage(id) {
@@ -504,7 +530,10 @@ let checkoutStep = 'cart' // 'cart' | 'checkout' | 'success'
 function loadCart() {
   try {
     const raw = localStorage.getItem('tayyib_cart')
-    return raw ? JSON.parse(raw) : []
+    // Drop any saved items whose product is now sold out
+    return raw
+      ? JSON.parse(raw).filter((i) => !products.find((p) => p.id === i.productId && p.soldOut))
+      : []
   } catch (e) {
     return []
   }
@@ -519,6 +548,10 @@ function saveCart() {
 }
 
 function addToCart(product, size, qty) {
+  if (product.soldOut) {
+    showToast(`${product.nameEn} is currently sold out`)
+    return
+  }
   const key = `${product.id}__${size.label}`
   const existing = cart.find((item) => item.key === key)
   if (existing) {
